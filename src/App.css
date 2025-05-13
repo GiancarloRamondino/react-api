@@ -1,0 +1,28 @@
+img{
+    width: 150px;
+    height: 200px;
+}
+
+.row{
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    flex-direction: row;
+    gap: 20px;
+    width: 100%;
+}
+
+.col{
+    display: flex;
+    flex-direction: column;
+}
+
+.container{
+}
+
+.card{
+    width: 200px;
+    border-radius: 10px;
+    background-color: #f0f0f0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
