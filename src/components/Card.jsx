@@ -2,34 +2,73 @@ import { useState } from 'react';
 import axios from 'axios';
 
 function Card() {
-  const [actresses, setActresses] = useState([]);
+const [actresses, setActresses] = useState([]);
+const [showActresses, setShowActresses] = useState(false);
 
-  const fetchActresses = () => {
-    axios
-      .get("https://lanciweb.github.io/demo/api/actresses/")
-      .then((response) => { setActresses(response.data) })
-      .catch((error) => { console.error('ERRORE CARICAMENTO PERSONAGGI', error); });
-  }
-
-  const [actors, setActors] = useState([]);
-
-  const fetchActors = () => {
-    axios
-      .get("https://lanciweb.github.io/demo/api/actors/")
-      .then((response) => { setActors(response.data) })
-      .catch((error) => { console.error('ERRORE CARICAMENTO PERSONAGGI', error); });
-  }
-
-    const fetchPeople = () => {
+const fetchActresses = () => {
+    if (showActresses) {
+        setActresses([]);
+        setShowActresses(false);
+    } else {
         axios
             .get("https://lanciweb.github.io/demo/api/actresses/")
-            .then((response) => { setActresses(response.data) })
-            .catch((error) => { console.error('ERRORE CARICAMENTO PERSONAGGI', error); });
+            .then((response) => {
+                setActresses(response.data);
+                setShowActresses(true);
+            })
+            .catch((error) => {
+                console.error('ERRORE CARICAMENTO PERSONAGGI', error);
+            });
+    }
+};
+
+const [actors, setActors] = useState([]);
+const [showActors, setShowActors] = useState(false);
+
+const fetchActors = () => {
+    if (showActors) {
+        setActors([]);
+        setShowActors(false);
+    } else {
         axios
             .get("https://lanciweb.github.io/demo/api/actors/")
-            .then((response) => { setActors(response.data) })
-            .catch((error) => { console.error('ERRORE CARICAMENTO PERSONAGGI', error); });
+            .then((response) => {
+                setActors(response.data);
+                setShowActors(true);
+            })
+            .catch((error) => {
+                console.error('ERRORE CARICAMENTO PERSONAGGI', error);
+            });
     }
+};
+const [combinedList, setCombinedList] = useState([]);
+const [showCombinedList, setShowCombinedList] = useState(false);
+
+const fetchPeople = () => {
+    if (showCombinedList) {
+        setCombinedList([]);
+        setShowCombinedList(false);
+    } else {
+        axios
+            .all([
+                axios.get("https://lanciweb.github.io/demo/api/actresses/"),
+                axios.get("https://lanciweb.github.io/demo/api/actors/")
+            ])
+            .then(
+                axios.spread((actressesResponse, actorsResponse) => {
+                    const combined = [
+                        ...actressesResponse.data,
+                        ...actorsResponse.data
+                    ];
+                    setCombinedList(combined);
+                    setShowCombinedList(true);
+                })
+            )
+            .catch((error) => {
+                console.error('ERRORE CARICAMENTO PERSONAGGI', error);
+            });
+    }
+};
 
 
 
@@ -79,7 +118,7 @@ return (
             <div className='container'>
                 <button onClick={fetchPeople}>Lista Combinata</button>
                 <ul className="card">
-                    {[...actresses, ...actors].map((person) => {
+                    {combinedList.map((person) => {
                         return (
                             <li key={person.id}>
                                 <h2>{person.name}</h2>
