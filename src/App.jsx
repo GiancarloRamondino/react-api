@@ -4,26 +4,29 @@ import './App.css';
 
 
 function App() {
-  const [character, setCharacter] = useState([]);
+  const [actresses, setActresses] = useState([]);
 
   const fetchCharacter = () => {
     axios
       .get("https://lanciweb.github.io/demo/api/actresses/")
-      .then((response) => { setCharacter(response.data.results) })
-      .catch((error) => { console.error('ERRORE CARICAMENTO PERSONAGGI'), error });
+      .then((response) => { setActresses(response.data) })
+      .catch((error) => { console.error('ERRORE CARICAMENTO PERSONAGGI', error); });
   }
 
   return (
     <div>
       <button onClick={fetchCharacter}>Carica personaggi</button>
       <ul>
-        {character.map((character) => {
+        {actresses.map((actress) => {
           return (
-            <li key={character.id}>
-              <h2>{character.name}</h2>
-              <img src={character.image} alt={character.name} />
-              <p>{character.status}</p>
-              <p>{character.species}</p>
+            <li key={actress.id}>
+              <h2>{actress.name}</h2>
+              <img src={actress.image} alt={actress.name} />
+              <p>{actress.nationality}</p>
+              <p>{actress.most_famous_movies}</p>
+              <p>{actress.birth_year}</p>
+              <p>{actress.awards}</p>
+              <p>{actress.biography}</p>
             </li>
           )
         })}
